@@ -7,6 +7,8 @@ venv/
 
 # Ignore environment variable files
 .env
+.venv
+.artifacts
 
 # Ignore OS or IDE files
 .DS_Store

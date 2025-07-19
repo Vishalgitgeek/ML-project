@@ -1,0 +1,4 @@
+[ 2025-07-19 14:55:47,872 ] 20 root - INFO - inside data ingestion
+[ 2025-07-19 14:55:47,892 ] 24 root - INFO - exported csv dataset as dataframe
+[ 2025-07-19 14:55:47,898 ] 28 root - INFO - train test initiated
+[ 2025-07-19 14:55:47,912 ] 34 root - INFO - ingestion of data is completed
