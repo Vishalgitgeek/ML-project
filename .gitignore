@@ -8,10 +8,12 @@ venv/
 # Ignore environment variable files
 .env
 .venv
+.venv/.
 .artifacts
 
 # Ignore OS or IDE files
 .DS_Store
 .vscode/
 .idea/
+
 
