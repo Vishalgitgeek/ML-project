@@ -1,9 +1,0 @@
-[ 2025-07-19 19:54:11,049 ] 21 root - INFO - inside data ingestion
-[ 2025-07-19 19:54:11,054 ] 25 root - INFO - exported csv dataset as dataframe
-[ 2025-07-19 19:54:11,059 ] 29 root - INFO - train test initiated
-[ 2025-07-19 19:54:11,065 ] 35 root - INFO - ingestion of data is completed
-[ 2025-07-19 19:54:11,089 ] 74 root - INFO - read train and test data completed....
-[ 2025-07-19 19:54:11,089 ] 75 root - INFO - fetching preprocessing object
-[ 2025-07-19 19:54:11,089 ] 53 root - INFO - categorical cols encoding completed...
-[ 2025-07-19 19:54:11,089 ] 54 root - INFO - numerical cols standard scaling completed...
-[ 2025-07-19 19:54:11,090 ] 88 root - INFO - applying preprocessing object on training and testing dataframe
