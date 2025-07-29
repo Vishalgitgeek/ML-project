@@ -12,8 +12,9 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 
 from src.utils import save_object
+from dataclasses import dataclass
 
-
+@dataclass
 class DataTransformationConfig:
     preprocessor_obj_file_path = os.path.join('artifacts', 'model.pkl')
 
@@ -116,3 +117,10 @@ class DataTransformation:
 
         except Exception as e:
             raise Custom_Exception(e, sys)
+        
+if __name__ == "__main__":
+    obj = DataTransformation()
+    train_data, test_data = obj.initiate_data_ingestion()
+
+    data_transformation = DataTransformation()
+    data_transformation.initiate_data_transformation(train_data, test_data)
