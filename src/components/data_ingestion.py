@@ -6,6 +6,7 @@ from src.logger import logging
 from src.exception import Custom_Exception
 
 from src.components.data_transformation import DataTransformation, DataTransformationConfig
+from src.components.model_trainer import ModelTrainer, ModelTrainingConfig
 
 @dataclass
 class dataIngestionConfig:
@@ -40,13 +41,30 @@ class DataIngestion:
             )
         except Exception as e:
             raise Custom_Exception(e, sys)
-        
+
+
+
+# This is the main entry point for the data ingestion process.
+# It will initiate the data ingestion, followed by data transformation and model training.
+# this could be use in a script to run the entire pipeline.
+# but i will be doing this in a separate script to avoid circular imports.
+
+
+
 if __name__=="__main__":
     obj = DataIngestion()
     train_data, test_data = obj.initiate_data_ingestion()
 
     data_transformation = DataTransformation()
-    data_transformation.initiate_data_transformation(train_data, test_data)
-            
+    train_arr, test_arr,_ = data_transformation.initiate_data_transformation(train_data, test_data)
+
+    ModelTrainer = ModelTrainer()
+    best_model_name, model_report = ModelTrainer.initiate_model_trainer(train_arr, test_arr)
+
+    print(f"Best model: {best_model_name}")
+    print("Model report:", model_report)
+
+    logging.info("Model training completed successfully.")
+
 
     
