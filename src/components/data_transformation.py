@@ -19,7 +19,7 @@ from src.components.model_trainer import ModelTrainingConfig, ModelTrainer
 
 @dataclass
 class DataTransformationConfig:
-    preprocessor_obj_file_path = os.path.join('artifacts', 'model.pkl')
+    preprocessor_obj_file_path = os.path.join('artifacts', 'preprocessor.pkl')
 
 
 class DataTransformation:
