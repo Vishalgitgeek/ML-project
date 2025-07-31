@@ -24,7 +24,7 @@ class DataTransformationConfig:
 
 class DataTransformation:
     def __init__(self):
-        self.DataTransformation_config = DataTransformationConfig()
+        self.data_transformation_config = DataTransformationConfig()
 
     def get_data_transformer_object(self):
         # responsible for data transformation
@@ -108,14 +108,14 @@ class DataTransformation:
 
             save_object(
 
-                file_path = self.DataTransformation_config.preprocessor_obj_file_path,
+                file_path = self.data_transformation_config.preprocessor_obj_file_path,
                 obj = preprocessing_obj
             )
 
             return (
                 train_arr,
                 test_arr,
-                self.DataTransformation_config.preprocessor_obj_file_path,
+                self.data_transformation_config.preprocessor_obj_file_path,
             )
 
         except Exception as e:

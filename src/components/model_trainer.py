@@ -11,6 +11,8 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.neighbors import KNeighborsRegressor
 from xgboost import XGBRegressor
 from catboost import CatBoostRegressor
+from math import sqrt
+import numpy as np
 
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error   
 
@@ -58,11 +60,13 @@ class ModelTrainer:
                 r2 = r2_score(y_test, y_pred)
                 mae = mean_absolute_error(y_test, y_pred)
                 mse = mean_squared_error(y_test, y_pred)
+                rmse = np.sqrt(mse)
                 
                 model_report[model_name] = {
                     'r2_score': r2,
                     'mean_absolute_error': mae,
-                    'mean_squared_error': mse
+                    'mean_squared_error': mse,
+                    'root_mean_squared_error': rmse
                 }
                 
             best_model_name = max(model_report, key=lambda x: model_report[x]['r2_score'])
