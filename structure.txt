@@ -1,0 +1,38 @@
+.
+├── artifacts
+│   ├── best_model.pkl
+│   ├── data.csv
+│   ├── preprocessor.pkl
+│   ├── test.csv
+│   └── train.csv
+├── catboost_info
+│   ├── catboost_training.json
+│   ├── learn
+│   ├── learn_error.tsv
+│   ├── time_left.tsv
+│   └── tmp
+├── ml_webapp
+│   ├── app
+│   ├── artifacts
+│   ├── db.sqlite3
+│   ├── manage.py
+│   ├── ml_webapp
+│   └── src
+├── notebook
+│   ├── data
+│   ├── EDA student data.ipynb
+│   └── model training.ipynb
+├── predict.py
+├── README.md
+├── requirements.txt
+├── setup.py
+├── src
+│   ├── components
+│   ├── exception.py
+│   ├── __init__.py
+│   ├── logger.py
+│   ├── pipeline
+│   └── utils.py
+└── structure.txt
+
+15 directories, 21 files
