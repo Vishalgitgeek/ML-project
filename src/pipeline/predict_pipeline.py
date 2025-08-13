@@ -1,23 +1,28 @@
-import os
 import sys
-import pandas as pd
-import numpy as np
 import pickle
-
+import pandas as pd
 from src.exception import Custom_Exception
 from src.logger import logging
+from src.paths import BEST_MODEL_PATH, PREPROCESSOR_PATH
 
 class PredictPipeline:
     def __init__(self):
         try:
-            self.model_path = os.path.join('artifacts', 'best_model.pkl')
-            self.preprocessor_path = os.path.join('artifacts', 'preprocessor.pkl')
+            self.model_path = BEST_MODEL_PATH
+            self.preprocessor_path = PREPROCESSOR_PATH
         except Exception as e:
             raise Custom_Exception(e, sys)
 
-    def predict(self, input_df):
+    def predict(self, input_data):
+        """
+        input_data: Can be a Pandas DataFrame or a dictionary.
+        """
         try:
             logging.info("Loading preprocessor and model...")
+
+            # Ensure input_data is a DataFrame
+            if not isinstance(input_data, pd.DataFrame):
+                input_data = pd.DataFrame(input_data)
 
             # Load the preprocessor
             with open(self.preprocessor_path, 'rb') as f:
@@ -28,7 +33,7 @@ class PredictPipeline:
                 model = pickle.load(f)
 
             logging.info("Preprocessing input data...")
-            input_transformed = preprocessor.transform(input_df)
+            input_transformed = preprocessor.transform(input_data)
 
             logging.info("Generating prediction...")
             prediction = model.predict(input_transformed)
@@ -37,7 +42,7 @@ class PredictPipeline:
 
         except Exception as e:
             raise Custom_Exception(e, sys)
-        
+      
 
 
 # to print column name of preprocessor

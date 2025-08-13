@@ -1,22 +1,28 @@
-# Ignore Python bytecode
+# Python cache
 __pycache__/
-*.pyc
+*.py[cod]
+*.pyo
+*.pyd
+*.pkl
 
-# Ignore virtual environment
+# Virtual environment
 venv/
+.env/
 
-# Ignore environment variable files
-.env
-.venv
-.venv/.
-.artifacts
-
-# Ignore OS or IDE files
+# OS-specific files
 .DS_Store
-.vscode/
-.idea/
+Thumbs.db
 
-
+# Logs
 logs/
-artifacts/
-catboost_info/
+*.log
+
+# Ignore all artifacts except production model files
+artifacts/*
+!artifacts/best_model.pkl
+!artifacts/preprocessor.pkl
+
+# Django specific
+db.sqlite3
+/staticfiles/
+media/

@@ -4,13 +4,12 @@ from django.http import HttpResponse
 # Create your views here.
 
 # def predict_view(request):
-#     # return HttpResponse("Hello, world! This is the index page of the ML web app.")
+#     # return HttpResponse("Hello, world")
 #     return render(request, 'app/home.html')
 
 
-from django.shortcuts import render
 from .forms import PredictionForm
-from src.pipeline.predict_pipeline import PredictPipeline  # Update path as needed
+from src.pipeline.predict_pipeline import PredictPipeline  
 
 def predict_view(request):
     prediction = None

@@ -2,6 +2,7 @@ import sys, os
 from src.logger import logging
 from src.exception import Custom_Exception
 from src.utils import save_object
+from src.paths import BEST_MODEL_PATH, PREPROCESSOR_PATH
 from dataclasses import dataclass
 
 from sklearn.ensemble import AdaBoostRegressor, GradientBoostingRegressor, RandomForestRegressor
@@ -74,8 +75,10 @@ class ModelTrainer:
             
             logging.info(f"Best model found: {best_model_name} with R2 score: {model_report[best_model_name]['r2_score']}")
             
-            save_object(file_path = self.model_trainer_config.trained_model_file_path,
-                         obj=best_model)
+            # save_object(file_path = self.model_trainer_config.trained_model_file_path,
+            #              obj=best_model) edit
+            save_object(file_path=BEST_MODEL_PATH, obj=best_model)
+            # save_object(file_path=PREPROCESSOR_PATH, obj=preprocessor)
 
             return best_model_name, model_report
 

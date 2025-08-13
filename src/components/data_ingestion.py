@@ -4,6 +4,7 @@ from dataclasses import dataclass
 import os, sys
 from src.logger import logging
 from src.exception import Custom_Exception
+from src.paths import PREPROCESSOR_PATH
 
 # from src.components.data_transformation import DataTransformation, DataTransformationConfig
 # from src.components.model_trainer import ModelTrainer, ModelTrainingConfig
