@@ -79,25 +79,6 @@ look at structure.txt file
 
    pip install -e .
 
-
-*Why this project matter?*
-```bash
-In real-world ML workflows, data scientists and engineers must collaborate across tools, frameworks, and deployment targets. This project simulates:
-
-    Code modularity (via src/)
-    Exception handling (Custom_Exception)
-    Logging for observability
-    Model versioning and packaging
-
-It acts as a personal boilerplate for future machine learning projects with production goals.
-
-    -> TODOs / Future Work
-    Upload CSV for batch predictions
-    Dockerize the app
-    CI/CD Integration
-    Cloud deployment
-    Add user input validation
-
  Author
 
 Vishal Kumar
