@@ -1,5 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+import os, sys
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
+from src.pipeline.predict_pipeline import PredictPipeline
+
 
 # Create your views here.
 
