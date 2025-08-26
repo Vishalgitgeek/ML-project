@@ -1,0 +1,151 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch Predictions - Student Score Predictor</title>
+    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+</head>
+<body>
+    <div class="container medium">
+        <div class="header">
+            <h1>📊 Batch Predictions</h1>
+            <p>Upload a CSV file to predict multiple student scores at once</p>
+            <div class="nav-links">
+                <a href="{% url 'index' %}">Single Prediction</a>
+                <a href="{% url 'batch_history' %}">Batch History</a>
+                <a href="{% url 'prediction_history' %}">Prediction History</a>
+            </div>
+        </div>
+        
+        <div class="content">
+            <!-- Messages -->
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <form method="POST" enctype="multipart/form-data" id="batchForm">
+                {% csrf_token %}
+                
+                <div class="upload-section">
+                    <div class="upload-icon">📤</div>
+                    <h3>Upload Your CSV File</h3>
+                    <p>Select a CSV file containing student data for batch predictions</p>
+                    
+                    <div class="file-input-wrapper">
+                        {{ form.csv_file }}
+                        <label for="{{ form.csv_file.id_for_label }}" class="file-input-button">
+                            Choose CSV File
+                        </label>
+                    </div>
+                    
+                    <div class="file-name" id="fileName" style="display: none;"></div>
+                    
+                    {% if form.csv_file.errors %}
+                        <div class="alert alert-error">
+                            {% for error in form.csv_file.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="instructions">
+                    <h3>📋 CSV File Requirements</h3>
+                    <ul>
+                        <li><strong>Required columns:</strong> gender, race/ethnicity, parental level of education, lunch, test preparation course, reading score, writing score</li>
+                        <li><strong>Gender values:</strong> male, female</li>
+                        <li><strong>Race/ethnicity values:</strong> group A, group B, group C, group D, group E</li>
+                        <li><strong>Education values:</strong> some high school, high school, some college, associate's degree, bachelor's degree, master's degree</li>
+                        <li><strong>Lunch values:</strong> standard, free/reduced</li>
+                        <li><strong>Test prep values:</strong> none, completed</li>
+                        <li><strong>Score range:</strong> 0-100 for both reading and writing scores</li>
+                        <li><strong>File size limit:</strong> Maximum 5MB</li>
+                        <li><strong>Row limit:</strong> Maximum 1000 rows per file</li>
+                    </ul>
+                </div>
+                
+                <div class="sample-download">
+                    <p>Don't have a CSV file? Download our sample template:</p>
+                    <a href="{% url 'sample_csv' %}" class="sample-link">📥 Download Sample CSV</a>
+                </div>
+                
+                <div class="submit-section">
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        🚀 Process Batch Predictions
+                    </button>
+                </div>
+                
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p><strong>Processing your batch...</strong></p>
+                    <p>This may take a few moments depending on the file size.</p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // File input handling
+        const fileInput = document.getElementById('{{ form.csv_file.id_for_label }}');
+        const fileName = document.getElementById('fileName');
+        const submitBtn = document.getElementById('submitBtn');
+        const loading = document.getElementById('loading');
+        const form = document.getElementById('batchForm');
+        
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files.length > 0) {
+                const file = this.files[0];
+                fileName.textContent = `Selected: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+                fileName.style.display = 'block';
+                
+                // Enable submit button
+                submitBtn.disabled = false;
+                
+                // Validate file size
+                if (file.size > 5 * 1024 * 1024) {
+                    fileName.style.color = '#dc3545';
+                    fileName.textContent += ' - Error: File too large (max 5MB)';
+                    submitBtn.disabled = true;
+                } else if (!file.name.toLowerCase().endsWith('.csv')) {
+                    fileName.style.color = '#dc3545';
+                    fileName.textContent += ' - Error: Please select a CSV file';
+                    submitBtn.disabled = true;
+                } else {
+                    fileName.style.color = '#28a745';
+                }
+            } else {
+                fileName.style.display = 'none';
+                submitBtn.disabled = true;
+            }
+        });
+        
+        // Form submission handling
+        form.addEventListener('submit', function() {
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert('Please select a CSV file first.');
+                return false;
+            }
+            
+            // Show loading state
+            loading.style.display = 'block';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Processing...';
+            
+            // Hide the form to prevent multiple submissions
+            form.style.opacity = '0.7';
+            form.style.pointerEvents = 'none';
+        });
+        
+        // Initialize submit button state
+        submitBtn.disabled = true;
+    </script>
+</body>
+</html>

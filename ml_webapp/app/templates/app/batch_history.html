@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch History - Student Score Predictor</title>
+    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 Batch History</h1>
+            <p>View all your batch prediction jobs</p>
+            <div class="nav-links">
+                <a href="{% url 'index' %}">Single Prediction</a>
+                <a href="{% url 'batch_predict' %}">New Batch</a>
+                <a href="{% url 'prediction_history' %}">Prediction History</a>
+            </div>
+        </div>
+        
+        <div class="content">
+            {% if page_obj %}
+                {% for batch in page_obj %}
+                <div class="batch-card">
+                    <div class="batch-header">
+                        <div>
+                            <div class="batch-title">📄 {{ batch.filename }}</div>
+                            <div class="batch-date">{{ batch.upload_time|date:"M d, Y g:i A" }}</div>
+                        </div>
+                        <div class="batch-status status-{{ batch.status|lower }}">
+                            {{ batch.status }}
+                        </div>
+                    </div>
+                    
+                    <div class="batch-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">{{ batch.total_records }}</div>
+                            <div class="stat-label">Total Records</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">{{ batch.processed_records }}</div>
+                            <div class="stat-label">Successful</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">{{ batch.failed_records }}</div>
+                            <div class="stat-label">Failed</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">
+                                {% widthratio batch.processed_records batch.total_records 100 %}%
+                            </div>
+                            <div class="stat-label">Success Rate</div>
+                        </div>
+                    </div>
+                    
+                    <div class="batch-actions">
+                        <a href="{% url 'batch_result' batch.id %}" class="btn btn-primary">
+                            👁️ View Results
+                        </a>
+                        {% if batch.status == 'COMPLETED' %}
+                        <a href="{% url 'download_batch_results' batch.id %}" class="btn btn-success">
+                            📥 Download CSV
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+                
+                <!-- Pagination -->
+                {% if page_obj.has_other_pages %}
+                <div class="pagination">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1">&laquo; First</a>
+                        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                    {% endif %}
+                    
+                    <span class="current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                    </span>
+                    
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">Next</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                    {% endif %}
+                </div>
+                {% endif %}
+                
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">📊</div>
+                    <h3>No Batch Predictions Yet</h3>
+                    <p>Start by uploading a CSV file for batch predictions</p>
+                    <br>
+                    <a href="{% url 'batch_predict' %}" class="btn btn-primary">
+                        🚀 Create First Batch
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

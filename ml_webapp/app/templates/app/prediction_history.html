@@ -1,0 +1,141 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction History - Student Score Predictor</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'app/css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📈 Prediction History</h1>
+            <p>View all your single predictions</p>
+            <div class="nav-links">
+                <a href="{% url 'index' %}">Single Prediction</a>
+                <a href="{% url 'batch_predict' %}">Batch Predictions</a>
+                <a href="{% url 'batch_history' %}">Batch History</a>
+            </div>
+        </div>
+        
+        <div class="content">
+            {% if page_obj %}
+                <!-- Summary Statistics -->
+                {% if page_obj.paginator.count > 0 %}
+                <div class="summary-stats">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">{{ page_obj.paginator.count }}</div>
+                            <div class="stat-label">Total Predictions</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">
+                                {% with predictions=page_obj.object_list %}
+                                    {% if predictions %}
+                                        {{ predictions|first|floatformat:1 }}
+                                    {% else %}
+                                        0
+                                    {% endif %}
+                                {% endwith %}
+                            </div>
+                            <div class="stat-label">Latest Score</div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Predictions List -->
+                {% for prediction in page_obj %}
+                <div class="prediction-card">
+                    <div class="prediction-header">
+                        <div>
+                            <h3>Math Score Prediction</h3>
+                        </div>
+                        <div class="prediction-date">
+                            {{ prediction.created_at|date:"M d, Y g:i A" }}
+                        </div>
+                    </div>
+                    
+                    <!-- Scores Grid -->
+                    <div class="scores-grid">
+                        <div class="score-item reading-score">
+                            <div class="score-label">Reading Score</div>
+                            <div class="score-value">{{ prediction.reading_score }}</div>
+                        </div>
+                        
+                        <div class="score-item writing-score">
+                            <div class="score-label">Writing Score</div>
+                            <div class="score-value">{{ prediction.writing_score }}</div>
+                        </div>
+                        
+                        <div class="score-item math-score">
+                            <div class="score-label">Predicted Math</div>
+                            <div class="score-value">{{ prediction.predicted_math_score|floatformat:1 }}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Student Details -->
+                    <div class="prediction-details">
+                        <div class="detail-group">
+                            <div class="detail-label">Gender</div>
+                            <div class="detail-value">{{ prediction.gender|title }}</div>
+                        </div>
+                        
+                        <div class="detail-group">
+                            <div class="detail-label">Race/Ethnicity</div>
+                            <div class="detail-value">{{ prediction.race_ethnicity|title }}</div>
+                        </div>
+                        
+                        <div class="detail-group">
+                            <div class="detail-label">Parental Education</div>
+                            <div class="detail-value">{{ prediction.parental_level_of_education|title }}</div>
+                        </div>
+                        
+                        <div class="detail-group">
+                            <div class="detail-label">Lunch Type</div>
+                            <div class="detail-value">{{ prediction.lunch|title }}</div>
+                        </div>
+                        
+                        <div class="detail-group">
+                            <div class="detail-label">Test Preparation</div>
+                            <div class="detail-value">{{ prediction.test_preparation_course|title }}</div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                
+                <!-- Pagination -->
+                {% if page_obj.has_other_pages %}
+                <div class="pagination">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1">&laquo; First</a>
+                        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                    {% endif %}
+                    
+                    <span class="current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                    </span>
+                    
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">Next</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                    {% endif %}
+                </div>
+                {% endif %}
+                
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">📊</div>
+                    <h3>No Predictions Yet</h3>
+                    <p>Start by making your first single prediction</p>
+                    <br>
+                    <a href="{% url 'index' %}" class="btn btn-primary">
+                        Make First Prediction
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

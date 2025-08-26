@@ -1,0 +1,153 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch Results - Student Score Predictor</title>
+    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Batch Results</h1>
+            <p>Results for: {{ batch.filename }}</p>
+            <div class="nav-links">
+                <a href="{% url 'index' %}">Single Prediction</a>
+                <a href="{% url 'batch_predict' %}">New Batch</a>
+                <a href="{% url 'batch_history' %}">Batch History</a>
+            </div>
+        </div>
+        
+        <div class="content">
+            <!-- Summary Cards -->
+            <div class="summary-cards">
+                <div class="summary-card info">
+                    <h3>{{ summary.total_records }}</h3>
+                    <p>Total Records</p>
+                </div>
+                
+                <div class="summary-card success">
+                    <h3>{{ summary.successful_predictions }}</h3>
+                    <p>Successful Predictions</p>
+                </div>
+                
+                <div class="summary-card warning">
+                    <h3>{{ summary.failed_predictions }}</h3>
+                    <p>Failed Predictions</p>
+                </div>
+                
+                <div class="summary-card info">
+                    <h3>{{ summary.success_rate|floatformat:1 }}%</h3>
+                    <p>Success Rate</p>
+                </div>
+                
+                {% if summary.average_predicted_score > 0 %}
+                <div class="summary-card">
+                    <h3>{{ summary.average_predicted_score|floatformat:1 }}</h3>
+                    <p>Average Score</p>
+                </div>
+                
+                <div class="summary-card">
+                    <h3>{{ summary.min_predicted_score|floatformat:1 }} - {{ summary.max_predicted_score|floatformat:1 }}</h3>
+                    <p>Score Range</p>
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Actions -->
+            <div class="actions">
+                <a href="{% url 'download_batch_results' batch.id %}" class="btn btn-success">
+                    📥 Download Results CSV
+                </a>
+                <a href="{% url 'batch_predict' %}" class="btn btn-primary">
+                    🚀 New Batch Prediction
+                </a>
+            </div>
+            
+            <!-- Results Table -->
+            <div class="results-table">
+                <div class="table-header">
+                    <h3>Detailed Results ({{ predictions|length }} of {{ summary.total_records }} records)</h3>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Row</th>
+                            <th>Gender</th>
+                            <th>Race/Ethnicity</th>
+                            <th>Education</th>
+                            <th>Reading</th>
+                            <th>Writing</th>
+                            <th>Predicted Math</th>
+                            <th>Status</th>
+                            <th>Error</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for prediction in predictions %}
+                        <tr>
+                            <td>{{ prediction.row_number }}</td>
+                            <td>{{ prediction.gender|title }}</td>
+                            <td>{{ prediction.race_ethnicity|title }}</td>
+                            <td>{{ prediction.parental_level_of_education|title }}</td>
+                            <td>{{ prediction.reading_score }}</td>
+                            <td>{{ prediction.writing_score }}</td>
+                            <td>
+                                {% if prediction.is_successful %}
+                                    <span class="score-highlight">{{ prediction.predicted_math_score|floatformat:2 }}</span>
+                                {% else %}
+                                    <span style="color: #dc3545;">—</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if prediction.is_successful %}
+                                    <span class="status-success">SUCCESS</span>
+                                {% else %}
+                                    <span class="status-failed">FAILED</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if prediction.error_message %}
+                                    <span class="error-details" title="{{ prediction.error_message }}">
+                                        {{ prediction.error_message|truncatechars:30 }}
+                                    </span>
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="9" style="text-align: center; padding: 40px; color: #666;">
+                                No prediction records found.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Pagination -->
+            {% if page_obj.has_other_pages %}
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; First</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                {% endif %}
+                
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+                
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">Next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
